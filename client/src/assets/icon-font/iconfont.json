@@ -1,0 +1,37 @@
+{
+  "id": "3740366",
+  "name": "chatRoom",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1110448",
+      "name": "下一首",
+      "font_class": "xiayishou",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "7594048",
+      "name": "24gl-play",
+      "font_class": "24gl-play",
+      "unicode": "ea6d",
+      "unicode_decimal": 60013
+    },
+    {
+      "icon_id": "7594152",
+      "name": "24gf-pause2",
+      "font_class": "24gf-pause2",
+      "unicode": "ea81",
+      "unicode_decimal": 60033
+    },
+    {
+      "icon_id": "20402207",
+      "name": "展开",
+      "font_class": "zhankai",
+      "unicode": "e6f5",
+      "unicode_decimal": 59125
+    }
+  ]
+}
