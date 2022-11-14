@@ -8,6 +8,7 @@ const schema = new mongoose.Schema({
   userName: {
     type: String,
   },
+  quote: String,
 });
 
 module.exports = mongoose.model("Message", schema);

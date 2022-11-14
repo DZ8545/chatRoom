@@ -48,7 +48,7 @@ const ShowMessages = memo(() => {
 
   function handleScroll(e) {
     if (e.target.scrollTop === 0) {
-      socketEmit("moreMessages", "0001");
+      socketEmit("moreMessages");
     }
   }
   const roomMain = React.createRef();

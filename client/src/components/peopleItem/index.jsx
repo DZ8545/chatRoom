@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const PeopleItemWrapper = styled.div`
@@ -9,11 +10,16 @@ const PeopleItemWrapper = styled.div`
   padding: 5px;
   position: relative;
   .itemName {
-    margin-left: 5px;
+    margin: 0 5px;
     font-size: 16px;
   }
 `;
 const PeopleItem = memo((props) => {
+  const { roomMasterId } = useSelector((state) => {
+    return {
+      roomMasterId: state.room.roomMasterId,
+    };
+  });
   const { info, isMy = false } = props;
   return (
     <PeopleItemWrapper>
@@ -25,6 +31,7 @@ const PeopleItem = memo((props) => {
         style={{ borderRadius: "50%" }}
       />
       <div className="itemName">{info.name}</div>
+      {roomMasterId === info.userId && <div>(房主)</div>}
       {isMy && <div style={{ position: "absolute", right: "10px" }}>我</div>}
     </PeopleItemWrapper>
   );

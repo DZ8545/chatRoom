@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const { isLogin } = require("./socket.js");
+const path = require("path");
+const { isLogin, roomIsExisted, roomAdd, joinRoom } = require("./socket.js");
 
 module.exports = (app) => {
   const express = require("express");
@@ -39,15 +40,13 @@ module.exports = (app) => {
     if (item.length !== 0) {
       const token = jwt.sign(
         {
-          name: req.params.name,
+          name: req.body.name,
           userId: item[0].id,
         },
         "dz8545"
       );
       return res.send({
         status: 200,
-        name: req.params.name,
-        headImg: item[0].headImg,
         userId: item[0].id,
         token,
       });
@@ -56,6 +55,39 @@ module.exports = (app) => {
       status: 400,
       msg: "用户名密码错误",
     });
+  });
+
+  const Room = require("../models/room");
+  router.post("/room/create", async (req, res) => {
+    if (roomIsExisted(req.body.roomId)) {
+      return res.send({
+        status: 400,
+      });
+    }
+    await Room.create(req.body);
+    roomAdd(req.body);
+    return res.send({
+      status: 200,
+    });
+  });
+
+  router.post("/room/joinRoom", async (req, res) => {
+    if (joinRoom({ roomId: req.body.roomId, password: req.body.password })) {
+      return res.send({
+        status: 200,
+      });
+    }
+    return res.send({
+      status: 400,
+    });
+  });
+
+  const multer = require("multer");
+  const upload = multer({ dest: path.join(__dirname, "../uploads") });
+  router.post("/upload", upload.single("file"), async (req, res) => {
+    const file = req.file;
+    file.url = `http://chat.dz8545.xyz/uploads/${file.filename}`;
+    res.send({ status: 200, fileUrl: file.url });
   });
 
   app.use("/api", router);

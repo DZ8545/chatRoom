@@ -4,5 +4,6 @@ const schema = new mongoose.Schema({
   password: { type: String },
   email: { type: String },
   headImg: { type: String },
+  description: { type: String },
 });
 module.exports = mongoose.model("User", schema);

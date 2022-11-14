@@ -7,6 +7,9 @@ import { createRef } from "react";
 import classNames from "classnames";
 
 const MusicWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  color: white;
   .preMusic {
     transform: rotate(180deg);
   }
@@ -26,6 +29,7 @@ const MusicWrapper = styled.div`
   }
   .xiayishou:hover {
     color: red;
+    cursor: pointer;
   }
   .playIcon {
     z-index: 9;
@@ -33,9 +37,11 @@ const MusicWrapper = styled.div`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    color: white;
     font-weight: 1000;
     font-size: 20px;
+    &:hover {
+      cursor: pointer;
+    }
   }
   audio {
     width: 100%;
@@ -87,6 +93,7 @@ const Music = memo(() => {
       setIsPlay(true);
       setMusicIsLoading(false);
     }
+    // eslint-disable-next-line
   }, [musicRefresh]);
   useEffect(() => {
     if (isPlay) {
@@ -94,6 +101,7 @@ const Music = memo(() => {
     } else {
       playerRef.current.pause();
     }
+    // eslint-disable-next-line
   }, [isPlay]);
   function nextMusic(isNext = true) {
     setMusicIsLoading(true);

@@ -1,6 +1,8 @@
 import React, { memo } from "react";
 import styled from "styled-components";
 import classnames from "classnames";
+import { useDispatch } from "react-redux";
+import { saveQuoteAction } from "../../store/modules/message";
 
 const MessageItemWrapper = styled.div`
   .item {
@@ -11,6 +13,17 @@ const MessageItemWrapper = styled.div`
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      .quote {
+        background-color: rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        min-width: 30px;
+        white-space: pre-wrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
       .name {
         font-size: 16px;
       }
@@ -30,6 +43,7 @@ const MessageItemWrapper = styled.div`
         position: relative;
         margin: 3px 0;
         white-space: pre-wrap;
+        font-size: 16px;
         &::before {
           content: "";
           position: absolute;
@@ -74,6 +88,7 @@ const index = memo((props) => {
   const { isMy, messageItem } = props;
   const date = new Date(messageItem.time);
   const nowDate = new Date();
+  const dispatch = useDispatch();
   let time;
   if (date.getFullYear() === nowDate.getFullYear()) {
     const startTimeMs = new Date().setHours(0, 0, 0, 0);
@@ -104,6 +119,11 @@ const index = memo((props) => {
   } else {
     time = date.toLocaleString();
   }
+  function contentClick() {
+    dispatch(
+      saveQuoteAction(messageItem.userName + "：" + messageItem.message)
+    );
+  }
   return (
     <MessageItemWrapper>
       <div className={classnames([!isMy ? "item" : "item item-my"])}>
@@ -119,9 +139,14 @@ const index = memo((props) => {
           <div className="name">{messageItem.userName}</div>
           <div
             className={classnames([isMy ? "content content-my" : "content"])}
+            onDoubleClick={() => contentClick()}
+            title="双击引用"
           >
             {messageItem.message}
           </div>
+          {messageItem.quote !== "" && (
+            <div className="quote">{messageItem.quote}</div>
+          )}
           <div className="time">{time}</div>
         </div>
       </div>

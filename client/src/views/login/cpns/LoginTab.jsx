@@ -45,12 +45,10 @@ const LoginTab = memo(() => {
             duration: 2,
           });
           const userInfo = {
-            name: values.username,
             token: res.data.token,
             userId: res.data.userId,
-            headImg: res.data.headImg,
           };
-          dispatch(saveUserAction(userInfo));
+          dispatch(saveUserAction(res.data.userId));
           localStorage.setItem("user", JSON.stringify(userInfo));
           navigate("/home");
         } else if (res.data.status === 401) {

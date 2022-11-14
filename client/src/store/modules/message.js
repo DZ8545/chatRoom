@@ -8,6 +8,7 @@ const messageSlice = createSlice({
     broadcasts: [],
     toBottom: 0,
     messagesIndex: 0,
+    quote: "",
   },
 
   reducers: {
@@ -29,6 +30,12 @@ const messageSlice = createSlice({
     saveHistoryMessagesCount(state, action) {
       state.historyMessagesCount = state.historyMessagesCount + action.payload;
     },
+    clearBroadcastAction(state, action) {
+      state.broadcasts = [];
+    },
+    saveQuoteAction(state, action) {
+      state.quote = action.payload;
+    },
   },
 });
 
@@ -39,5 +46,7 @@ export const {
   messagesIndexChangeAction,
   toBottomAction,
   saveHistoryMessagesCount,
+  clearBroadcastAction,
+  saveQuoteAction,
 } = messageSlice.actions;
 export default messageSlice.reducer;

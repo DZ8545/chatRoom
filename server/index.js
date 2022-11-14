@@ -5,6 +5,8 @@ app.use(express.json());
 app.use(cors());
 require("./plugins/db.js")();
 require("./routes")(app);
+app.use("/", express.static(__dirname + "/build"));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 const port = 3001;
 
 const http = require("http").Server(app);
@@ -19,7 +21,6 @@ http.listen(8001, () => {
   console.log(`ws://localhost:8001`);
 });
 
-app.use("/", express.static(__dirname + "/build"));
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
 });

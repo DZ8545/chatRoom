@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
   EditOutlined,
@@ -9,13 +9,15 @@ import {
 import { Avatar, Card, Button, Upload, Form, Input } from "antd";
 import { useState } from "react";
 import ImgCrop from "antd-img-crop";
+import { socketEmit } from "../../services/socket";
+import { saveProfileAction } from "../../store/modules/user";
 
 const ProfileWrapper = styled.div`
   position: relative;
   .box {
     background-color: white;
     width: 100%;
-    height: 230px;
+    height: 250px;
     position: absolute;
     z-index: 99;
     border-top: 1px solid rgba(0, 0, 0, 0.2);
@@ -26,30 +28,34 @@ const ProfileWrapper = styled.div`
   }
 `;
 const Profile = memo(() => {
+  const dispatch = useDispatch();
   const [boxType, setBoxType] = useState(0);
-  const { name, headImg } = useSelector((state) => {
+  const { name, headImg, userId, description } = useSelector((state) => {
     return {
       name: state.user.name,
       headImg: state.user.headImg,
+      userId: state.user.userId,
+      description: state.user.description,
     };
   });
   const { Meta } = Card;
 
   const onFinish = (values) => {
-    console.log("Success:", values);
+    const info = {
+      name: values.name,
+      description: values.description,
+      headImg: fileList[0]?.response?.fileUrl || headImg,
+      userId,
+    };
+    socketEmit("changeProfile", info);
+    dispatch(saveProfileAction(info));
+    setBoxType(0);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: headImg,
-    },
-  ]);
+  const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
@@ -91,7 +97,7 @@ const Profile = memo(() => {
         <Meta
           avatar={<Avatar src={headImg} size={60} />}
           title={name}
-          description="暂无"
+          description={description || "暂无"}
         />
       </Card>
       {boxType === 2 && (
@@ -113,7 +119,7 @@ const Profile = memo(() => {
             <Form.Item label="头像" valuePropName="fileList">
               <ImgCrop rotate>
                 <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  action="http://chat.dz8545.xyz/api/upload"
                   listType="picture-card"
                   fileList={fileList}
                   onChange={onChange}
@@ -127,6 +133,7 @@ const Profile = memo(() => {
               label="昵称"
               name="name"
               initialValue={name}
+              style={{ marginBottom: "22px" }}
               rules={[
                 {
                   required: true,
@@ -137,7 +144,11 @@ const Profile = memo(() => {
               <Input />
             </Form.Item>
 
-            <Form.Item label="签名" name="autograph">
+            <Form.Item
+              label="签名"
+              name="description"
+              initialValue={description}
+            >
               <Input />
             </Form.Item>
 
@@ -147,6 +158,13 @@ const Profile = memo(() => {
                 span: 16,
               }}
             >
+              <Button
+                type="primary"
+                style={{ marginRight: "5px" }}
+                onClick={() => setBoxType(0)}
+              >
+                取消
+              </Button>
               <Button type="primary" htmlType="submit">
                 修改
               </Button>
